@@ -1,7 +1,6 @@
 import alpaca_backtrader_api as alpaca
 import backtrader as bt
 from strategies.adjusted_macd import *
-import pytz
 from datetime import datetime, timedelta
 from local_settings import alpaca_paper
 
@@ -12,9 +11,9 @@ ALPACA_PAPER = True
 fromdate = datetime(2020, 12, 31)
 todate = datetime.now()
 
-tickers = ['SPY']
+tickers = ['QQQ']
 timeframes = {
-    '5MIN': 5,
+    '5MIN': 15,
 }
 
 cerebro = bt.Cerebro()
