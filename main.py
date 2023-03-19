@@ -1,19 +1,19 @@
 import alpaca_backtrader_api as alpaca
 import backtrader as bt
 from strategies.adjusted_macd import *
-from datetime import datetime, timedelta
+from datetime import datetime
 from local_settings import alpaca_paper
 
 ALPACA_KEY_ID = alpaca_paper['api_key']
 ALPACA_SECRET_KEY = alpaca_paper['api_secret']
 ALPACA_PAPER = True
 
-fromdate = datetime(2020, 12, 31)
+fromdate = datetime(2021, 3, 31)
 todate = datetime.now()
 
-tickers = ['QQQ']
+tickers = ['SPY']
 timeframes = {
-    '5MIN': 15,
+    '15MIN': 15,
 }
 
 cerebro = bt.Cerebro()
@@ -22,7 +22,6 @@ store = alpaca.AlpacaStore(
     key_id=ALPACA_KEY_ID,
     secret_key=ALPACA_SECRET_KEY,
     paper=ALPACA_PAPER,
-    usePolygon=True
 )
 
 if not ALPACA_PAPER:
@@ -40,7 +39,7 @@ for ticker in tickers:
             dataname=ticker,
             timeframe=bt.TimeFrame.Minutes,
             compression=mins,
-            fromdate=fromdate - timedelta(minutes=200 * 9 * mins),
+            fromdate=fromdate,
             todate=todate,
             historical=True,
             backfill_start=True,
@@ -48,11 +47,11 @@ for ticker in tickers:
 
         cerebro.adddata(d)
 
-cerebro.addsizer(bt.sizers.SizerFix, stake=1)
+# cerebro.addsizer(bt.sizers.SizerFix, stake=1)
 cerebro.addstrategy(AdjustedMACD)
 cerebro.broker.setcash(100000)
 cerebro.broker.setcommission(commission=0.0)
 cerebro.run()
 
 print("Final Portfolio Value: %.2f" % cerebro.broker.getvalue())
-cerebro.plot(style='candlestick', barup='green', bardown='red')
+# cerebro.plot(style='candlestick', barup='green', bardown='red')
